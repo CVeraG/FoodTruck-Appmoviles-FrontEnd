@@ -8,8 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mx.ipn.escom.verac.foodtruck2.Screens.AuthScreen
+import mx.ipn.escom.verac.foodtruck2.Screens.CartScreen
 import mx.ipn.escom.verac.foodtruck2.Screens.HomeScreen
 import mx.ipn.escom.verac.foodtruck2.Screens.MenuScreen
+import mx.ipn.escom.verac.foodtruck2.Screens.cartItems
 
 @Composable
 fun Navigation() {
@@ -28,6 +30,11 @@ fun Navigation() {
         composable("menu"){
             MenuScreen(navController = navController)
         }
+        composable("cart") {
+            // Agrega la pantalla del carrito aquí
+            CartScreen(cartItems = cartItems)
+        }
+
 
     }
 }
