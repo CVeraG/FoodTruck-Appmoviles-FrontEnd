@@ -70,7 +70,7 @@ fun AuthScreen(navController: NavController) {
         TabLayout(
             selectedIndex = selectedTab.intValue,
             items = listOf(
-                "Iniciar sesion" to {
+                "Iniciar sesión" to {
                     SignIn(
                         navController = navController,
                         sharedPreferences = sharedPreferences
@@ -108,6 +108,10 @@ fun SignIn(
     val showPassword = remember {
         mutableStateOf(false)
     }
+
+    val radioOptions = listOf("Cliente", "Empresa")
+    var selectedRadioOption by remember { mutableStateOf(radioOptions[0]) }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -118,7 +122,7 @@ fun SignIn(
             onValueChange = {
                 email.value = it
             },
-            label = "Correo electronico"
+            label = "Correo electrónico"
         )
         Spacer(modifier = Modifier.height(16.dp))
         AppTextField(
@@ -126,7 +130,7 @@ fun SignIn(
             onValueChange = {
                 password.value = it
             },
-            label = "Contrasena",
+            label = "Contraseña",
             visualTransformation = if (showPassword.value)
                 VisualTransformation.None
             else
@@ -149,26 +153,19 @@ fun SignIn(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Text(text = "Olvidaste tu contrasena?", color = Color.Gray, fontSize = 11.sp)
+            Text(text = "¿Olvidaste tu contraseña?", color = Color.Gray, fontSize = 11.sp)
         }
+
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
-                Checkbox(checked = rememberMeChecked.value, onCheckedChange = {
-                    rememberMeChecked.value = it
-                })
-            }
-            Text(
-                text = "Recuerdame",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
+        RadioGroup(
+            options = radioOptions,
+            selectedOption = selectedRadioOption,
+            onOptionSelected = { option ->
+                selectedRadioOption = option
+            } )
+
         Spacer(modifier = Modifier.height(32.dp))
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,6 +174,8 @@ fun SignIn(
                 sharedPreferences.edit().apply {
                     putBoolean("loggedIn", true)
                     putString("email", email.value)
+                    putString("userType", selectedRadioOption)
+
                 }
                     .apply()
                 navController.navigate("home") {
@@ -184,7 +183,7 @@ fun SignIn(
                 }
             }, shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = "Iniciar sesion", fontFamily = ubuntuFont)
+            Text(text = "Iniciar sesión", fontFamily = ubuntuFont)
         }
     }
 }
@@ -222,9 +221,6 @@ fun SignUp(
         mutableStateOf(false)
     }
 
-    val radioOptions = listOf("Cliente", "Empresa")
-    var selectedRadioOption by remember { mutableStateOf(radioOptions[0]) }
-
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -254,7 +250,7 @@ fun SignUp(
                 onValueChange = {
                     email.value = it
                 },
-                label = "Correo electronico"
+                label = "Correo electrónico"
             )
             Spacer(modifier = Modifier.height(16.dp))
             AppTextField(
@@ -262,7 +258,7 @@ fun SignUp(
                 onValueChange = {
                     password.value = it
                 },
-                label = "Contasena",
+                label = "Contaseña",
                 visualTransformation = if (showPassword.value)
                     VisualTransformation.None
                 else
@@ -286,7 +282,7 @@ fun SignUp(
                 onValueChange = {
                     passwordRepeat.value = it
                 },
-                label = "Repite tu contrasena",
+                label = "Repite tu contraseña",
                 visualTransformation = if (showPasswordRepeat.value)
                     VisualTransformation.None
                 else
@@ -305,13 +301,7 @@ fun SignUp(
                 }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            RadioGroup(
-                options = radioOptions,
-                selectedOption = selectedRadioOption,
-                onOptionSelected = { option ->
-                    selectedRadioOption = option
-                } )
-            Spacer(modifier = Modifier.height(32.dp))
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -322,7 +312,6 @@ fun SignUp(
                         putString("nombre", email.value)
                         putString("apellidos", email.value)
                         putString("email", email.value)
-                        putString("userType", selectedRadioOption)
 
                     }
                         .apply()
@@ -415,12 +404,12 @@ fun RadioRow(
 
 @Preview(showBackground = true)
 @Composable
-fun SignUpPreview() {
+fun SignInPreview() {
     // Puedes proporcionar valores de ejemplo para los parámetros de SignUp si es necesario
     val navController = rememberNavController()
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("main", Context.MODE_PRIVATE)
         // Agrega cualquier configuración adicional del tema aquí
-        SignUp(navController = navController, sharedPreferences = sharedPreferences)
+        SignIn(navController = navController, sharedPreferences = sharedPreferences)
 
 }
