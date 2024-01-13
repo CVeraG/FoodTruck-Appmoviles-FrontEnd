@@ -3,11 +3,9 @@ package mx.ipn.escom.verac.foodtruck2.Screens
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,13 +18,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -35,9 +31,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,23 +45,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import mx.ipn.escom.verac.foodtruck2.R
 import mx.ipn.escom.verac.foodtruck2.components.TabLayout
 import mx.ipn.escom.verac.foodtruck2.ui.theme.ubuntuFont
-import androidx.compose.ui.platform.LocalContext
+import kotlin.collections.listOf
+
 
 
 data class Menu(
     val name: String,
     @DrawableRes val image: Int,
     val price: Int,
-    val quantity: Int
+    var quantity: Int
 )
 
 val foods = listOf(
@@ -89,78 +84,79 @@ val foods = listOf(
 )
 
 val cartItems = mutableStateListOf<Pair<Menu, Int>>()
+var selectedTabIndex = mutableStateOf(0)
+var selectedProducts = mutableStateListOf<Menu>()
+var allProducts = mutableStateListOf(*foods.toTypedArray())
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val uiController = rememberSystemUiController()
-    uiController.isStatusBarVisible = false
-
-    val selectedProducts = remember { mutableStateListOf<Pair<Menu, Int>>() }
-
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(
-            title = {
-                Text(text = "Nuestro Menú", fontFamily = ubuntuFont)
-            },
-            navigationIcon = {
-                Row {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                title = { Text("Bienvenido", fontFamily = ubuntuFont) },
+                navigationIcon = {
+                    Row {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                    }
                 }
-            }
-        )
-    }) { paddings ->
-        Column() {
-            Column(modifier = Modifier.padding(paddings)) {
-                val selectedFoodType = remember {
-                    mutableIntStateOf(0)
-                }
-                val foodsState = remember {
-                    mutableStateListOf(*foods.toTypedArray())
-                }
+            )
+        },
+        bottomBar = {
+            Column (modifier = Modifier.padding(top  = 40.dp)){
                 Spacer(modifier = Modifier.height(16.dp))
                 TabLayout(
+                    selectedIndex = selectedTabIndex,
                     items = listOf(
-                        "Bebidas" to {
-                            Foods(
-                                navController = navController,
-                                items = foodsState,
-                                onTap = {
-                                    navController.navigate("food")
-                                },
-                                onAddToCartClick = { food, quantity ->
-                                    // Lógica para añadir al carrito con nombre y cantidad
-                                    selectedProducts.add(Pair(food, quantity))
-                                }
-                            )
-                        },
-                        "Carrito" to {
-                                navController.navigate("cart")
-
-                        },
-                        "Pedidos" to {
-
-                        },
+                        "Menu" to { Foods(navController = navController) },
+                        "Carrito" to { ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList()) },
+                        "Pedidos" to { ShowOrdersTab() }
                     ),
-                    selectedIndex = selectedFoodType.intValue,
-                    onTabClick = {
-                        selectedFoodType.intValue = it
-                    },
-                    textHeight = 30.dp,
-                    indicatorPadding = PaddingValues(horizontal = 10.dp)
+                    onTabClick = {selectedTabIndex.value = it}
+
                 )
+            }
 
             }
 
+    ) { innerPaddings ->
+        Box(Modifier.padding(innerPaddings)) {
+            when(selectedTabIndex.value) {
+                0 -> Foods(navController = navController)
+                1 -> {
+                    ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())
+                }
+                2 -> ShowOrdersTab()
+            }
         }
-
-
     }
+
+}
+
+@Composable
+fun ShowOrdersTab() {
+    // Contenido del tab de Pedidos
 }
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun Foods(navController: NavController, items: List<Menu>, onTap: (Menu) -> Unit, onAddToCartClick: (Menu, Int) -> Unit ) {
+fun Foods(navController: NavController) {
+    val foodsState = remember {
+        mutableStateListOf(*foods.toTypedArray())
+    }
+    var items by remember { mutableStateOf(allProducts) }
+
+    var onTap = {
+        navController.navigate("food")
+    }
+    var onAddToCartClick = { food: Menu ->
+        // Lógica para añadir al carrito con nombre y cantidad
+        selectedProducts.add(food)
+    }
+
 
     Column(
         modifier = Modifier
@@ -183,9 +179,6 @@ fun Foods(navController: NavController, items: List<Menu>, onTap: (Menu) -> Unit
             ) {
                 itemsIndexed(items) { index, food ->
                     Card(
-                        onClick = {
-                            onTap(food)
-                        },
                         elevation = CardDefaults.cardElevation(
                             defaultElevation = 4.dp
                         ),
@@ -219,7 +212,7 @@ fun Foods(navController: NavController, items: List<Menu>, onTap: (Menu) -> Unit
                                     .padding(horizontal = 16.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                var quantity by remember { mutableStateOf(0) }
+                                var quantity by remember { mutableStateOf(food.quantity) }
                                 // Botón de disminuir cantidad
                                 IconButton(
                                     onClick = {
@@ -246,6 +239,12 @@ fun Foods(navController: NavController, items: List<Menu>, onTap: (Menu) -> Unit
                                 ) {
                                     Icon(Icons.Rounded.Add, contentDescription = "Aumentar cantidad")
                                 }
+                                DisposableEffect(quantity) {
+                                    onDispose {
+                                        food.quantity = quantity
+
+                                    }
+                                }
                             }
                         }
                     }
@@ -265,13 +264,21 @@ fun Foods(navController: NavController, items: List<Menu>, onTap: (Menu) -> Unit
             Button(
                 onClick = {
                     // Lógica para agregar al carrito
-                    val selectedProducts = items.filter { it.quantity > 0 }
-                    for (product in selectedProducts) {
-                        onAddToCartClick(product, product.quantity)
+                    for (product in items) {
+                        if (product.quantity > 0) {
+                            val existingProduct = selectedProducts.find { it.name == product.name }
+                            if (existingProduct != null) {
+                                existingProduct.quantity = product.quantity
+                            } else {
+                                selectedProducts.add(product.copy())
+                            }
+                        }
                     }
-                    navController.navigate("cart") {}
+                    if (selectedProducts.isNotEmpty()) {
+                        selectedTabIndex.value = 1
+                        allProducts = mutableStateListOf(*items.toTypedArray())
 
-
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

@@ -2,9 +2,6 @@ package mx.ipn.escom.verac.foodtruck2.Screens
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.RadioGroup
-import android.widget.ScrollView
-import android.widget.TableLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,16 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,7 +62,7 @@ fun AuthScreen(navController: NavController) {
             mutableIntStateOf(0)
         }
         TabLayout(
-            selectedIndex = selectedTab.intValue,
+            selectedIndex = selectedTab,
             items = listOf(
                 "Iniciar sesión" to {
                     SignIn(
@@ -402,14 +396,3 @@ fun RadioRow(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SignInPreview() {
-    // Puedes proporcionar valores de ejemplo para los parámetros de SignUp si es necesario
-    val navController = rememberNavController()
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("main", Context.MODE_PRIVATE)
-        // Agrega cualquier configuración adicional del tema aquí
-        SignIn(navController = navController, sharedPreferences = sharedPreferences)
-
-}

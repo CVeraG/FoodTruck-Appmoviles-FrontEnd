@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TabLayout(
-    selectedIndex: Int = 0,
+    selectedIndex: MutableState<Int> ,
     items: List<Pair<String, @Composable () -> Unit>>,
     onTabClick: (Int) -> Unit,
     textHeight:Dp = 35.dp,
@@ -59,10 +60,10 @@ fun TabLayout(
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = pair.first, color = MaterialTheme.colorScheme.primary
-                            .copy(alpha = if (selectedIndex == index) 1f else .5f)
+                            .copy(alpha = if (selectedIndex.value == index) 1f else .5f)
                     )
                     AnimatedVisibility(
-                        visible = selectedIndex == index,
+                        visible = selectedIndex.value == index,
                         enter = scaleIn(),
                         exit = scaleOut()
                     ) {
@@ -80,7 +81,7 @@ fun TabLayout(
         }
         Spacer(modifier = Modifier.height(8.dp))
         AnimatedContent(targetState = selectedIndex) { state->
-            items[state].second()
+            items[state.value].second()
         }
     }
 }
