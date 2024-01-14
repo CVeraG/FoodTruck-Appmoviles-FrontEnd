@@ -88,7 +88,8 @@ var selectedTabIndex = mutableStateOf(0)
 var selectedProducts = mutableStateListOf<Menu>()
 var allProducts = mutableStateListOf(*foods.toTypedArray())
 var OpcionCarrito = mutableStateOf(0)
-
+var OpcionPedidos = mutableStateOf(0)
+var pedidoDetalles = mutableStateOf<Orden?>(null)
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,7 +122,11 @@ fun HomeScreen(navController: NavController) {
                             else{
                                 ShowComprarScreen(navController = navController, selectedProducts.toList())
                             } },
-                            "Pedidos" to { ShowOrdersTab(navController = navController) }
+                            "Pedidos" to { if(OpcionPedidos.value == 0){
+                                ShowOrdersTab(navController = navController)}
+                            else{
+                                DetallesOrden (navController = navController, pedidoDetalles = pedidoDetalles.value)
+                            }  }
                         ),
                         onTabClick = { selectedTabIndex.value = it }
                     )
@@ -134,12 +139,18 @@ fun HomeScreen(navController: NavController) {
                 0 -> Foods(navController = navController)
                 1 -> {
                     if(OpcionCarrito.value == 0){
-                    ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())}
+                        ShowOrdersTab(navController = navController)}
                     else{
                         ShowComprarScreen(navController = navController, selectedProducts.toList())
                     }
                 }
-                2 -> ShowOrdersTab(navController = navController)
+                2 -> {
+                    if(OpcionCarrito.value == 0){
+                        ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())}
+                    else{
+                        DetallesOrden (navController = navController, pedidoDetalles = pedidoDetalles.value)
+                    }
+                }
             }
         }
     }

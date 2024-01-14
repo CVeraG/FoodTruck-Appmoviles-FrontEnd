@@ -31,7 +31,7 @@ data class Orden(
     val productos: List<Menu>,
     val total: Double,
     val fecha: String,
-    val status: String
+    var status: String
 )
 
 @Composable
@@ -60,7 +60,9 @@ fun ShowOrdersTab(navController: NavController) {
                     ),
                     modifier = Modifier
                         .clickable{
-                            println("ENTRE AQUI JEFA $orden" )
+                            OpcionPedidos.value = 1
+                            pedidoDetalles.value = orden
+
                         }
 
                     ) {
