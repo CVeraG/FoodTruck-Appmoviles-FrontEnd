@@ -121,7 +121,7 @@ fun HomeScreen(navController: NavController) {
                             else{
                                 ShowComprarScreen(navController = navController, selectedProducts.toList())
                             } },
-                            "Pedidos" to { ShowOrdersTab() }
+                            "Pedidos" to { ShowOrdersTab(navController = navController) }
                         ),
                         onTabClick = { selectedTabIndex.value = it }
                     )
@@ -139,16 +139,13 @@ fun HomeScreen(navController: NavController) {
                         ShowComprarScreen(navController = navController, selectedProducts.toList())
                     }
                 }
-                2 -> ShowOrdersTab()
+                2 -> ShowOrdersTab(navController = navController)
             }
         }
     }
 }
 
-@Composable
-fun ShowOrdersTab() {
-    // Contenido del tab de Pedidos
-}
+
 @Composable
 fun Foods(navController: NavController) {
     val foodsState = remember {
