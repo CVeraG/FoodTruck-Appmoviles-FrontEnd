@@ -63,13 +63,13 @@ data class Menu(
 )
 
 val foods = listOf(
-    Menu(name = "Meal 1", image = R.drawable.meal_1, price = 0, quantity = 0),
-    Menu(name = "Meal 2", image = R.drawable.meal_2, price = 0, quantity = 0),
-    Menu(name = "Meal 3", image = R.drawable.meal_3, price = 0, quantity = 0),
-    Menu(name = "Meal 4", image = R.drawable.meal_4, price = 0, quantity = 0),
-    Menu(name = "Meal 5", image = R.drawable.meal_5, price = 0, quantity = 0),
-    Menu(name = "Meal 6", image = R.drawable.meal_6, price = 0, quantity = 0),
-    Menu(name = "Side 1", image = R.drawable.sides_1, price = 0, quantity = 0),
+    Menu(name = "Meal 1", image = R.drawable.meal_1, price = 1, quantity = 0),
+    Menu(name = "Meal 2", image = R.drawable.meal_2, price = 2, quantity = 0),
+    Menu(name = "Meal 3", image = R.drawable.meal_3, price = 3, quantity = 0),
+    Menu(name = "Meal 4", image = R.drawable.meal_4, price = 4, quantity = 0),
+    Menu(name = "Meal 5", image = R.drawable.meal_5, price = 5, quantity = 0),
+    Menu(name = "Meal 6", image = R.drawable.meal_6, price = 6, quantity = 0),
+    Menu(name = "Side 1", image = R.drawable.sides_1, price = 7, quantity = 0),
     Menu(name = "Side 2", image = R.drawable.sides_2, price = 0, quantity = 0),
     Menu(name = "Side 3", image = R.drawable.sides_3, price = 0, quantity = 0),
     Menu(name = "Side 4", image = R.drawable.sides_4, price = 0, quantity = 0),
@@ -87,7 +87,7 @@ val cartItems = mutableStateListOf<Pair<Menu, Int>>()
 var selectedTabIndex = mutableStateOf(0)
 var selectedProducts = mutableStateListOf<Menu>()
 var allProducts = mutableStateListOf(*foods.toTypedArray())
-
+var OpcionCarrito = mutableStateOf(0)
 
 
 
@@ -106,36 +106,43 @@ fun HomeScreen(navController: NavController) {
                     }
                 }
             )
-        },
-        bottomBar = {
-            Column (modifier = Modifier.padding(top  = 40.dp)){
-                Spacer(modifier = Modifier.height(16.dp))
-                TabLayout(
-                    selectedIndex = selectedTabIndex,
-                    items = listOf(
-                        "Menu" to { Foods(navController = navController) },
-                        "Carrito" to { ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList()) },
-                        "Pedidos" to { ShowOrdersTab() }
-                    ),
-                    onTabClick = {selectedTabIndex.value = it}
+            // Contenido de la barra superior con el TabLayout
+                Column(
+                    modifier = Modifier.padding(top = 40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TabLayout(
+                        selectedIndex = selectedTabIndex,
+                        items = listOf(
+                            "Menu" to { Foods(navController = navController) },
+                            "Carrito" to { if(OpcionCarrito.value == 0){
+                                ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())}
+                            else{
+                                ShowComprarScreen(navController = navController, selectedProducts.toList())
+                            } },
+                            "Pedidos" to { ShowOrdersTab() }
+                        ),
+                        onTabClick = { selectedTabIndex.value = it }
+                    )
+                }
 
-                )
-            }
-
-            }
-
+        }
     ) { innerPaddings ->
         Box(Modifier.padding(innerPaddings)) {
-            when(selectedTabIndex.value) {
+            when (selectedTabIndex.value) {
                 0 -> Foods(navController = navController)
                 1 -> {
-                    ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())
+                    if(OpcionCarrito.value == 0){
+                    ShowCartScreen(navController = navController, selectedProducts = selectedProducts.toList())}
+                    else{
+                        ShowComprarScreen(navController = navController, selectedProducts.toList())
+                    }
                 }
                 2 -> ShowOrdersTab()
             }
         }
     }
-
 }
 
 @Composable

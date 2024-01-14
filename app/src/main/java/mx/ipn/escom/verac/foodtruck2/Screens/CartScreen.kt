@@ -114,7 +114,8 @@ fun ShowCartScreen(navController: NavController, selectedProducts: List<Menu>) {
         ) {
             Button(
                 onClick = {
-                    // Lógica para procesar la compra
+                    selectedTabIndex.value = 1
+                    OpcionCarrito.value = 1
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
