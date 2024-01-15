@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mx.ipn.escom.verac.foodtruck2.Screens.AuthScreen
+import mx.ipn.escom.verac.foodtruck2.Screens.EmpleadoHomeScreen
 import mx.ipn.escom.verac.foodtruck2.Screens.HomeScreen
 import mx.ipn.escom.verac.foodtruck2.Screens.MenuScreen
 import mx.ipn.escom.verac.foodtruck2.Screens.ShowCartScreen
@@ -19,7 +20,7 @@ fun Navigation() {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("main", Context.MODE_PRIVATE)
     val userLoggedIn = sharedPreferences.getBoolean("loggedIn",false)
-    NavHost(navController = navController, startDestination = if (userLoggedIn) "home" else "auth"){
+    NavHost(navController = navController, startDestination = if (userLoggedIn) "empleado" else "auth"){
         composable("auth"){
             AuthScreen(navController = navController)
         }
@@ -29,6 +30,9 @@ fun Navigation() {
 
         composable("menu"){
             MenuScreen(navController = navController)
+        }
+        composable("empleado"){
+            EmpleadoHomeScreen(navController = navController)
         }
 
 
