@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,8 +78,8 @@ fun ShowComprarScreen(navController: NavController, selectedProducts: List<Menu>
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xfff1f1f1))
-            .background(Color(0xfff1f1f1))
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
+
     ) {
 
         Spacer(modifier = Modifier.height(22.dp))
@@ -84,6 +87,7 @@ fun ShowComprarScreen(navController: NavController, selectedProducts: List<Menu>
             value = campos.value["edificio"] ?: "",
             onValueChange = { newValue -> campos.value += "edificio" to newValue },
             label = "Edificio"
+
         )
         Spacer(modifier = Modifier.height(22.dp))
 
@@ -219,27 +223,28 @@ fun CompraTextField(
     trailing: (@Composable () -> Unit)? = null
 ) {
     Column {
-        Text(text = label)
+        Text(
+            text = label,
+            color = Color.Black)
+
         Spacer(modifier = Modifier.height(8.dp))
         Box(
             modifier = Modifier
                 .shadow(3.dp, RoundedCornerShape(10.dp))
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
-                .background(Color.Red),
-
-            ) {
+                .background(Color.White)
+        ) {
             TextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.White),
+                    .fillMaxWidth(),
                 value = value,
                 onValueChange = onValueChange,
                 visualTransformation = visualTransformation,
                 singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                ),
-                trailingIcon = trailing
+                colors = TextFieldDefaults.textFieldColors( containerColor = White),
+                trailingIcon = trailing,
+
             )
         }
     }

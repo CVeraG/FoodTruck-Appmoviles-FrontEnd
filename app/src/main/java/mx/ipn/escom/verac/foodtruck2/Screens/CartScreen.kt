@@ -39,6 +39,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ShowCartScreen(navController: NavController, selectedProducts: List<Menu>) {
+    if (navController.previousBackStackEntry != null) {
+    println("SI HAY PESTANA ATRAS")
+
+    }
     var isConfirmationDialogVisible by remember { mutableStateOf(false) }
     var productToDelete: Menu? by remember { mutableStateOf(null) }
 

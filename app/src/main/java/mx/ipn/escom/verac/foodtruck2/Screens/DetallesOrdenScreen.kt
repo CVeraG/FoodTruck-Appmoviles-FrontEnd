@@ -123,7 +123,7 @@ fun DetallesOrden(navController: NavController, pedidoDetalles: Orden?) {
                         contentColor = Color.White
                     ),
                     modifier = Modifier
-                        .fillMaxWidth()  // Hace que el botón ocupe todo el ancho disponible
+                        .fillMaxWidth()
                         .padding(vertical = 16.dp)
                 ) {
                     Text(text = "Cancelar Orden")

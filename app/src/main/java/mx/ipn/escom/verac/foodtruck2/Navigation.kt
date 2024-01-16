@@ -20,7 +20,22 @@ fun Navigation() {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("main", Context.MODE_PRIVATE)
     val userLoggedIn = sharedPreferences.getBoolean("loggedIn",false)
-    NavHost(navController = navController, startDestination = if (userLoggedIn) "empleado" else "auth"){
+    val userType = sharedPreferences.getString("userType", "")
+
+    NavHost(navController = navController, startDestination =
+
+    if (userLoggedIn) {
+        if(userType == "empleado"){
+            "empleado"
+        }else
+            "home"
+    } else "auth"
+
+
+
+
+    )
+    {
         composable("auth"){
             AuthScreen(navController = navController)
         }

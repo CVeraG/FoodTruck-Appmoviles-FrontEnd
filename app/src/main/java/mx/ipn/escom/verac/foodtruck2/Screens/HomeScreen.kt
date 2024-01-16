@@ -1,5 +1,6 @@
 package mx.ipn.escom.verac.foodtruck2.Screens
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -94,15 +95,46 @@ var pedidoDetalles = mutableStateOf<Orden?>(null)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    var enableSystemBackButton by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
+            BackHandler(enableSystemBackButton) {
+                when(selectedTabIndex.value){
+                    0 -> selectedTabIndex.value = 0
+                    1 -> when (OpcionCarrito.value){
+                        0 -> selectedTabIndex.value = 0
+                        1 -> OpcionCarrito.value = 0
+                    }
+                    2 -> when (OpcionPedidos.value){
+                        0 -> selectedTabIndex.value = 0
+                        1 -> OpcionPedidos.value = 0
+                    }
+                }
+            }
+
             CenterAlignedTopAppBar(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                 title = { Text("Bienvenido", fontFamily = ubuntuFont) },
                 navigationIcon = {
                     Row {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                        IconButton(onClick = {
+                            when(selectedTabIndex.value){
+                                0 -> selectedTabIndex.value = 0
+                                1 -> when (OpcionCarrito.value){
+                                    0 -> selectedTabIndex.value = 0
+                                    1 -> OpcionCarrito.value = 0
+                                }
+                                2 -> when (OpcionPedidos.value){
+                                    0 -> selectedTabIndex.value = 0
+                                    1 -> OpcionPedidos.value = 0
+                                }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                        }
+
                     }
                 }
             )
@@ -163,9 +195,6 @@ fun Foods(navController: NavController) {
     }
     var items by remember { mutableStateOf(allProducts) }
 
-    var onTap = {
-        navController.navigate("food")
-    }
     var onAddToCartClick = { food: Menu ->
         // Lógica para añadir al carrito con nombre y cantidad
         selectedProducts.add(food)
@@ -291,7 +320,6 @@ fun Foods(navController: NavController) {
                     if (selectedProducts.isNotEmpty()) {
                         selectedTabIndex.value = 1
                         allProducts = mutableStateListOf(*items.toTypedArray())
-
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

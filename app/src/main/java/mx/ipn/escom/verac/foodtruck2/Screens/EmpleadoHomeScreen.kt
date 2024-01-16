@@ -1,5 +1,6 @@
 package mx.ipn.escom.verac.foodtruck2.Screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +15,14 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,15 +43,50 @@ var ConsultaDetallesEmpleado = mutableStateOf<OrdenEmpleado?>(null)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmpleadoHomeScreen(navController: NavController) {
+    var enableSystemBackButton by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
+            BackHandler(enableSystemBackButton) {
+                // Lógica para manejar el evento de retroceso del sistema
+
+                    when(selectedTabIndexEmpleado.value){
+                        0 ->  when (OpcionPedidosEmpleado.value){
+                            0 -> selectedTabIndexEmpleado.value = 0
+                            1 -> OpcionPedidosEmpleado.value = 0
+                        }
+                        1 -> selectedTabIndexEmpleado.value = 0
+                        2 -> when (OpcionConsultaPedidosEmpleado.value){
+                            0 -> selectedTabIndexEmpleado.value = 0
+                            1 -> OpcionConsultaPedidosEmpleado.value = 0
+                        }
+                        3 -> selectedTabIndexEmpleado.value =  0
+                }
+            }
             CenterAlignedTopAppBar(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                 title = { Text("Food Truck", fontFamily = ubuntuFont) },
                 navigationIcon = {
                     Row {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                        IconButton(onClick = {
+                            when(selectedTabIndexEmpleado.value){
+                                0 ->  when (OpcionPedidosEmpleado.value){
+                                    0 -> selectedTabIndexEmpleado.value = 0
+                                    1 -> OpcionPedidosEmpleado.value = 0
+                                }
+                                1 -> selectedTabIndexEmpleado.value = 0
+                                2 -> when (OpcionConsultaPedidosEmpleado.value){
+                                    0 -> selectedTabIndexEmpleado.value = 0
+                                    1 -> OpcionConsultaPedidosEmpleado.value = 0
+                                }
+                                3 -> selectedTabIndexEmpleado.value =  0
+                            }
+                            enableSystemBackButton = false
+
+                        }) {
+                            Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                        }
                     }
                 }
             )
@@ -83,13 +123,14 @@ fun EmpleadoHomeScreen(navController: NavController) {
     ) { innerPaddings ->
         Box(Modifier.padding(innerPaddings)) {
             when (selectedTabIndexEmpleado.value) {
-                0 -> ShowOrdersTabEmpleado(navController = navController)
-                1 -> { if(OpcionPedidosEmpleado.value == 0){
+                0 -> if(OpcionPedidosEmpleado.value == 0){
                     ShowOrdersTabEmpleado(navController = navController)
                 }
                 else{
                     DetallesOrdenEmpleado (navController = navController, pedidoDetalles = pedidoDetallesEmpleado.value)
-                }  }
+                }
+                1 -> AsignarPedidosScreen(navController = navController)
+
                 2 -> { if(OpcionConsultaPedidosEmpleado.value == 0){
                     ConsultarPedidoAsignadoScreen(navController = navController)
                 }
@@ -103,27 +144,3 @@ fun EmpleadoHomeScreen(navController: NavController) {
 }
 
 
-@Composable
-fun AssignOrdersScreen(navController: NavController) {
-    // Lógica para la pestaña de asignar pedidos
-    // Puedes implementar aquí la interfaz para asignar pedidos a los empleados
-}
-
-@Composable
-fun ShowAssignedOrders(navController: NavController) {
-    // Lógica para la pestaña de consultar pedidos asignados
-    // Puedes implementar aquí la interfaz para ver los pedidos asignados a un empleado
-}
-
-@Composable
-fun DeliveryScreen(navController: NavController) {
-    // Lógica para la pestaña de entrega
-    // Puedes implementar aquí la interfaz para gestionar la entrega de pedidos
-}
-
-@Preview
-@Composable
-fun EmpleadoHomeScreenPreview() {
-    val navController = rememberNavController()
-    EmpleadoHomeScreen(navController)
-}

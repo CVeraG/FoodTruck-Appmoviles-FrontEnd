@@ -2,6 +2,7 @@ package mx.ipn.escom.verac.foodtruck2.Screens
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -54,7 +56,9 @@ fun AuthScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xfff1f1f1))
             .padding(horizontal = 20.dp, vertical = 20.dp),
+
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -107,6 +111,9 @@ fun SignIn(
     var selectedRadioOption by remember { mutableStateOf(radioOptions[0]) }
 
     Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xfff1f1f1)),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -171,9 +178,13 @@ fun SignIn(
                     putString("userType", selectedRadioOption)
 
                 }
-                    .apply()
-                navController.navigate("home") {
-                    popUpTo(0)
+                when (selectedRadioOption) {
+                    "Cliente" -> navController.navigate("home") {
+                        popUpTo(0)
+                    }
+                    "Empresa" -> navController.navigate("empleado") {
+                        popUpTo(0)
+                    }
                 }
             }, shape = RoundedCornerShape(10.dp)
         ) {
@@ -216,6 +227,8 @@ fun SignUp(
     }
 
     LazyColumn(
+        modifier = Modifier
+            .background(Color(0xfff1f1f1)),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -330,7 +343,7 @@ fun AppTextField(
     trailing: (@Composable () -> Unit)? = null
 ) {
     Column {
-        Text(text = label)
+        Text(text = label, color = Color.Black)
         Spacer(modifier = Modifier.height(8.dp))
         Box(
             modifier = Modifier
@@ -346,7 +359,10 @@ fun AppTextField(
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    containerColor = Color.White,
+                    textColor = Color.Black
+
                 ),
                 trailingIcon = trailing
             )
@@ -389,10 +405,12 @@ fun RadioRow(
         ) {
         RadioButton(
             selected = isSelected,
-            onClick = {onSelected()} // null disables interaction
+            onClick = {onSelected()},
+            colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
+
         )
         Spacer(modifier = Modifier.width(4.dp))
-        Text(text = text)
+        Text(text = text, color = Color.Gray)
     }
 }
 
