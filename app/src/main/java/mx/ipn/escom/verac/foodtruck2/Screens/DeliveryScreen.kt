@@ -36,11 +36,13 @@ fun DeliveryScreen(navController: NavController) {
     var showDialog2 by remember { mutableStateOf(false) }
 
     val pedido = listOf(
-        Menu(name = "Meal 1", image = R.drawable.meal_1, price = 1, quantity = 2),
-        Menu(name = "Meal 2", image = R.drawable.meal_2, price = 2, quantity = 7),
+        Menu(name = "pechuga con verduras", image = R.drawable.meal_1, price = 80, quantity = 1),
+        Menu(name = "Albondigas", image = R.drawable.meal_3, price = 60, quantity = 2),
+        Menu(name = "Filete", image = R.drawable.meal_4, price = 120, quantity = 1)
+
     )
-    val ordenes: List<Orden> = listOf(
-        Orden(pedido, 123.0, "2024-01-13", "En camino"),
+    val ordenes: List<OrdenEmpleado> = listOf(
+        OrdenEmpleado(pedido, 240.0, "2024-01-13", "En proceso", "Christopher"),
     )
     Column(
         modifier = Modifier
@@ -63,7 +65,7 @@ fun DeliveryScreen(navController: NavController) {
                         }
 
                 ) {
-                    OrderItem(orden = orden)
+                    OrderItemEmpleado(orden = orden)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(

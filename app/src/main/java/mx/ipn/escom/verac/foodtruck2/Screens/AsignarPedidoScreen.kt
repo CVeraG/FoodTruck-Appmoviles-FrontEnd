@@ -33,7 +33,7 @@ fun AsignarPedidosScreen(navController: NavController) {
     var selectedEmpleado by remember { mutableStateOf("Juan") }
     var selectedPedidoId by remember { mutableStateOf(0) } // Nuevo estado para el ID de pedido
     val empleados: List<String> = listOf("Juan", "Pedro", "Jorge")
-    val pedidos: List<Int> = listOf(1, 2, 3) // Lista de IDs de pedido (puedes cambiarlos según tus necesidades)
+    val pedidos: List<Int> = listOf(1, 2) // Lista de IDs de pedido (puedes cambiarlos según tus necesidades)
 
     Column(
         modifier = Modifier

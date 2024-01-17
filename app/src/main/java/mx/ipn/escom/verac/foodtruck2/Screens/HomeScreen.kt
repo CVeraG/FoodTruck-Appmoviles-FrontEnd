@@ -63,24 +63,18 @@ data class Menu(
 )
 
 val foods = listOf(
-    Menu(name = "Meal 1", image = R.drawable.meal_1, price = 1, quantity = 0),
-    Menu(name = "Meal 2", image = R.drawable.meal_2, price = 2, quantity = 0),
-    Menu(name = "Meal 3", image = R.drawable.meal_3, price = 3, quantity = 0),
-    Menu(name = "Meal 4", image = R.drawable.meal_4, price = 4, quantity = 0),
-    Menu(name = "Meal 5", image = R.drawable.meal_5, price = 5, quantity = 0),
-    Menu(name = "Meal 6", image = R.drawable.meal_6, price = 6, quantity = 0),
-    Menu(name = "Side 1", image = R.drawable.sides_1, price = 7, quantity = 0),
-    Menu(name = "Side 2", image = R.drawable.sides_2, price = 0, quantity = 0),
-    Menu(name = "Side 3", image = R.drawable.sides_3, price = 0, quantity = 0),
-    Menu(name = "Side 4", image = R.drawable.sides_4, price = 0, quantity = 0),
-    Menu(name = "Side 5", image = R.drawable.sides_5, price = 0, quantity = 0),
-    Menu(name = "Side 6", image = R.drawable.sides_6, price = 0, quantity = 0),
-    Menu(name = "Snack 1", image = R.drawable.snacks_1, price = 0, quantity = 0),
-    Menu(name = "Snack 2", image = R.drawable.snacks_2, price = 0, quantity = 0),
-    Menu(name = "Snack 3", image = R.drawable.snacks_3, price = 0, quantity = 0),
-    Menu(name = "Snack 4", image = R.drawable.snacks_4, price = 0, quantity = 0),
-    Menu(name = "Snack 5", image = R.drawable.snacks_5, price = 0, quantity = 0),
-    Menu(name = "Snack 6", image = R.drawable.snacks_6, price = 0, quantity = 0),
+    Menu(name = "pechuga con verduras", image = R.drawable.meal_1, price = 80, quantity = 0),
+    Menu(name = "Comida del día", image = R.drawable.meal_2, price = 75, quantity = 0),
+    Menu(name = "Albondigas", image = R.drawable.meal_3, price = 60, quantity = 0),
+    Menu(name = "Filete", image = R.drawable.meal_4, price = 120, quantity = 0),
+    Menu(name = "Pechuga asada", image = R.drawable.meal_5, price = 90, quantity = 0),
+    Menu(name = "Pollo al vapor", image = R.drawable.meal_6, price = 80, quantity = 0),
+    Menu(name = "Ensalada napolitana", image = R.drawable.sides_1, price = 70, quantity = 0),
+    Menu(name = "Pasta blanca", image = R.drawable.sides_2, price = 60, quantity = 0),
+    Menu(name = "Ensalada de frutas", image = R.drawable.sides_3, price = 45, quantity = 0),
+    Menu(name = "Verduras al vapor", image = R.drawable.sides_4, price = 50, quantity = 0),
+    Menu(name = "Papas 1", image = R.drawable.sides_5, price = 45, quantity = 0),
+    Menu(name = "Papas 2", image = R.drawable.sides_6, price = 30, quantity = 0),
 )
 
 val cartItems = mutableStateListOf<Pair<Menu, Int>>()

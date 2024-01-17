@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import mx.ipn.escom.verac.foodtruck2.R
 
+
 data class Orden(
     val productos: List<Menu>,
     val total: Double,
@@ -37,11 +38,13 @@ data class Orden(
 @Composable
 fun ShowOrdersTab(navController: NavController) {
     val pedido = listOf(
-        Menu(name = "Meal 1", image = R.drawable.meal_1, price = 1, quantity = 2),
-        Menu(name = "Meal 2", image = R.drawable.meal_2, price = 2, quantity = 7),
-    )
+        Menu(name = "pechuga con verduras", image = R.drawable.meal_1, price = 80, quantity = 1),
+        Menu(name = "Albondigas", image = R.drawable.meal_3, price = 60, quantity = 2),
+        Menu(name = "Filete", image = R.drawable.meal_4, price = 120, quantity = 1)
+
+        )
     val ordenes: List<Orden> = listOf(
-        Orden(pedido, 123.0, "2024-01-13", "En proceso"),
+        Orden(pedido, 240.0, "2024-01-16", "En proceso"),
         Orden(pedido, 123.0, "2021-01-13", "En proceso"),
     )
     Column(modifier = Modifier
@@ -74,7 +77,6 @@ fun ShowOrdersTab(navController: NavController) {
     }
 
 }
-
 @Composable
 fun OrderItem(orden: Orden) {
     Column(
